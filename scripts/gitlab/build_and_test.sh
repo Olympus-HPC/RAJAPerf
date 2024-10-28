@@ -241,7 +241,7 @@ then
     fi
 
     date
-    if [[ "${truehostname}" == "corona"  || "${truehostname}" == "tioga" ]]
+    if [[ "${truehostname}" == "tioga" ]]
     then
         module unload rocm
     fi
