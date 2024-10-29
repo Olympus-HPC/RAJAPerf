@@ -111,7 +111,7 @@ void ATOMIC::runHipVariantReplicateGlobal(VariantID vid)
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-      RAJA::forall<RAJA::hip_exec<block_size, true /*async*/>>(
+      RAJA::forall<RAJA::hip_exec<block_size, true /*async*/>>( res,
         RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
           ATOMIC_RAJA_BODY(RAJA::hip_atomic, i, ATOMIC_VALUE);
       });
