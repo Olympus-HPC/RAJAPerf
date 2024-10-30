@@ -60,6 +60,8 @@ void FIRST_MIN::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+    auto res{getOmpTargetResource()};
+
     using VL_TYPE = RAJA::expt::ValLoc<Real_type>;
 
     startTimer();
@@ -67,7 +69,7 @@ void FIRST_MIN::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG
 
       VL_TYPE tloc(m_xmin_init, m_initloc);
 
-      RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>(
+      RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>( res,
         RAJA::RangeSegment(ibegin, iend),
         RAJA::expt::Reduce<RAJA::operators::minimum>(&tloc),
         [=](Index_type i, VL_TYPE& loc) {
