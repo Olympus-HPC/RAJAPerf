@@ -85,6 +85,8 @@ void HALO_PACKING::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+    auto res{getOmpTargetResource()}; 
+
     using EXEC_POL = RAJA::omp_target_parallel_for_exec<threads_per_team>;
 
     startTimer();
@@ -99,7 +101,7 @@ void HALO_PACKING::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_
           auto halo_packing_pack_base_lam = [=](Index_type i) {
                 HALO_PACK_BODY;
               };
-          RAJA::forall<EXEC_POL>(
+          RAJA::forall<EXEC_POL>( res,
               RAJA::TypedRangeSegment<Index_type>(0, len),
               halo_packing_pack_base_lam );
           buffer += len;
@@ -127,7 +129,7 @@ void HALO_PACKING::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_
           auto halo_packing_unpack_base_lam = [=](Index_type i) {
                 HALO_UNPACK_BODY;
               };
-          RAJA::forall<EXEC_POL>(
+          RAJA::forall<EXEC_POL>( res,
               RAJA::TypedRangeSegment<Index_type>(0, len),
               halo_packing_unpack_base_lam );
           buffer += len;

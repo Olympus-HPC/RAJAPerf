@@ -74,6 +74,7 @@ void NODAL_ACCUMULATION_3D::runOpenMPTargetVariant(VariantID vid, size_t RAJAPER
   } else if ( vid == RAJA_OpenMPTarget ) {
 
     auto res{getOmpTargetResource()};
+
     RAJA::TypedListSegment<Index_type> zones(real_zones, iend,
                                              res, RAJA::Unowned);
 

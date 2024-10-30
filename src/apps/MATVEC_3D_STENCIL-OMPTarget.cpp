@@ -62,6 +62,7 @@ void MATVEC_3D_STENCIL::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UN
   } else if ( vid == RAJA_OpenMPTarget ) {
 
     auto res{getOmpTargetResource()};
+
     RAJA::TypedListSegment<Index_type> zones(real_zones, iend,
                                              res, RAJA::Unowned);
 
