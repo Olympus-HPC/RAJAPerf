@@ -276,7 +276,7 @@ public:
 #endif
 
 #if defined(RAJA_ENABLE_TARGET_OPENMP)
-  camp::resources::Omp getHostResource()
+  camp::resources::Omp getOmpTargetResource()
   {
     return camp::resources::Omp::get_default();
   }

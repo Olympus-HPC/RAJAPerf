@@ -51,12 +51,14 @@ void INIT_VIEW1D_OFFSET::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_U
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+     auto res{getOmpTargetResource()};
+
      INIT_VIEW1D_OFFSET_VIEW_RAJA;
 
      startTimer();
      for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-       RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>(
+       RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>( res,
          RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
          INIT_VIEW1D_OFFSET_BODY_RAJA;
        });
