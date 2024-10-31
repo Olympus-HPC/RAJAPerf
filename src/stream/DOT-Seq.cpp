@@ -76,7 +76,7 @@ void DOT::runSeqVariant(VariantID vid, size_t tune_idx)
 
     case RAJA_Seq : {
 
-      RAJA::resources::Host res;
+      auto res{getHostResource()};
 
       if (tune_idx == 0) {
 
@@ -85,7 +85,7 @@ void DOT::runSeqVariant(VariantID vid, size_t tune_idx)
 
           RAJA::ReduceSum<RAJA::seq_reduce, Real_type> dot(m_dot_init);
   
-          RAJA::forall<RAJA::seq_exec>(res,
+          RAJA::forall<RAJA::seq_exec>( res,
             RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
             DOT_BODY;
           });
@@ -102,7 +102,7 @@ void DOT::runSeqVariant(VariantID vid, size_t tune_idx)
 
           Real_type tdot = m_dot_init;
 
-          RAJA::forall<RAJA::seq_exec>(res,
+          RAJA::forall<RAJA::seq_exec>( res,
             RAJA::RangeSegment(ibegin, iend),
             RAJA::expt::Reduce<RAJA::operators::plus>(&tdot),
             [=] (Index_type i,

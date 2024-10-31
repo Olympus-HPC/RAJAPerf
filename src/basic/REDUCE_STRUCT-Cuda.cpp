@@ -233,7 +233,7 @@ void REDUCE_STRUCT::runCudaVariantRAJANewReduce(VariantID vid)
       Real_type txmax = m_init_max;
       Real_type tymax = m_init_max;
 
-      RAJA::forall<exec_policy>(res,
+      RAJA::forall<exec_policy>( res,
         RAJA::RangeSegment(ibegin, iend),
         RAJA::expt::Reduce<RAJA::operators::plus>(&txsum),
         RAJA::expt::Reduce<RAJA::operators::plus>(&tysum),

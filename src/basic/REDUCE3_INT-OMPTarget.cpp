@@ -62,6 +62,8 @@ void REDUCE3_INT::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_A
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+    auto res{getOmpTargetResource()}; 
+
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
@@ -69,7 +71,7 @@ void REDUCE3_INT::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_A
       Int_type tvmin = m_vmin_init;
       Int_type tvmax = m_vmax_init;
 
-      RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>(
+      RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>( res,
         RAJA::RangeSegment(ibegin, iend),
         RAJA::expt::Reduce<RAJA::operators::plus>(&tvsum),
         RAJA::expt::Reduce<RAJA::operators::minimum>(&tvmin),

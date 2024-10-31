@@ -32,10 +32,12 @@ void SORT::runOpenMPVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG(tune_idx))
 
     case RAJA_OpenMP : {
 
+      auto res{getHostResource()};
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-        RAJA::sort<RAJA::omp_parallel_for_exec>(RAJA_SORT_ARGS);
+        RAJA::sort<RAJA::omp_parallel_for_exec>(res, RAJA_SORT_ARGS);
 
       }
       stopTimer();

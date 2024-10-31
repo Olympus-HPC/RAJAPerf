@@ -44,10 +44,12 @@ void SORT::runSeqVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG(tune_idx))
 #if defined(RUN_RAJA_SEQ)
     case RAJA_Seq : {
 
+      auto res{getHostResource()};
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-        RAJA::sort<RAJA::seq_exec>(RAJA_SORT_ARGS);
+        RAJA::sort<RAJA::seq_exec>(res, RAJA_SORT_ARGS);
 
       }
       stopTimer();

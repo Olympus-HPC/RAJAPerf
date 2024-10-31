@@ -100,7 +100,7 @@ void REDUCE_STRUCT::runSeqVariant(VariantID vid, size_t tune_idx)
 
     case RAJA_Seq : {
 
-      RAJA::resources::Host res;
+      auto res{getHostResource()};
 
       if (tune_idx == 0) {
 
@@ -114,7 +114,7 @@ void REDUCE_STRUCT::runSeqVariant(VariantID vid, size_t tune_idx)
           RAJA::ReduceMax<RAJA::seq_reduce, Real_type> xmax(m_init_max);
           RAJA::ReduceMax<RAJA::seq_reduce, Real_type> ymax(m_init_max);
   
-          RAJA::forall<RAJA::seq_exec>(res,
+          RAJA::forall<RAJA::seq_exec>( res,
             RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
             REDUCE_STRUCT_BODY_RAJA;
           });
@@ -142,7 +142,7 @@ void REDUCE_STRUCT::runSeqVariant(VariantID vid, size_t tune_idx)
           Real_type txmax = m_init_max; 
           Real_type tymax = m_init_max; 
  
-          RAJA::forall<RAJA::seq_exec>(res,
+          RAJA::forall<RAJA::seq_exec>( res,
             RAJA::RangeSegment(ibegin, iend),
             RAJA::expt::Reduce<RAJA::operators::plus>(&txsum),
             RAJA::expt::Reduce<RAJA::operators::plus>(&tysum),

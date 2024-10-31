@@ -60,12 +60,14 @@ void DOT::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG(tune_
 
     case RAJA_OpenMPTarget : {
 
+      auto res{getOmpTargetResource()};
+
       startTimer();
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
         Real_type tdot = m_dot_init;
 
-        RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>(
+        RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>( res,
           RAJA::RangeSegment(ibegin, iend),
           RAJA::expt::Reduce<RAJA::operators::plus>(&tdot),
           [=] (Index_type i,

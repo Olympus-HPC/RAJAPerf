@@ -87,7 +87,7 @@ void FIRST_MIN::runOpenMPVariant(VariantID vid, size_t tune_idx)
 
     case RAJA_OpenMP : {
 
-      RAJA::resources::Host res;
+      auto res{getHostResource()};
 
       if (tune_idx == 0) {
 
@@ -98,7 +98,7 @@ void FIRST_MIN::runOpenMPVariant(VariantID vid, size_t tune_idx)
                              Real_type, Index_type> minloc(m_xmin_init,
                                                            m_initloc);
 
-          RAJA::forall<RAJA::omp_parallel_for_exec>(res,
+          RAJA::forall<RAJA::omp_parallel_for_exec>( res,
             RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
             FIRST_MIN_BODY_RAJA;
           });
@@ -116,7 +116,7 @@ void FIRST_MIN::runOpenMPVariant(VariantID vid, size_t tune_idx)
           RAJA::expt::ValLoc<Real_type, Index_type> tminloc(m_xmin_init,
                                                             m_initloc);
 
-          RAJA::forall<RAJA::omp_parallel_for_exec>(res,
+          RAJA::forall<RAJA::omp_parallel_for_exec>( res,
             RAJA::RangeSegment(ibegin, iend),
             RAJA::expt::Reduce<RAJA::operators::minimum>(&tminloc),
             [=](Index_type i,

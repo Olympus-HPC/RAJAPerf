@@ -77,7 +77,7 @@ void PI_REDUCE::runSeqVariant(VariantID vid, size_t tune_idx)
 
     case RAJA_Seq : {
 
-      RAJA::resources::Host res;
+      auto res{getHostResource()};
 
       if (tune_idx == 0) {
 
@@ -86,7 +86,8 @@ void PI_REDUCE::runSeqVariant(VariantID vid, size_t tune_idx)
 
           RAJA::ReduceSum<RAJA::seq_reduce, Real_type> pi(m_pi_init);
   
-          RAJA::forall<RAJA::seq_exec>(res, RAJA::RangeSegment(ibegin, iend),
+          RAJA::forall<RAJA::seq_exec>( res,
+            RAJA::RangeSegment(ibegin, iend),
             [=](Index_type i) {
               PI_REDUCE_BODY;
           });
@@ -103,7 +104,7 @@ void PI_REDUCE::runSeqVariant(VariantID vid, size_t tune_idx)
 
           Real_type tpi = m_pi_init;
  
-          RAJA::forall<RAJA::seq_exec>(res,
+          RAJA::forall<RAJA::seq_exec>( res,
             RAJA::RangeSegment(ibegin, iend),
             RAJA::expt::Reduce<RAJA::operators::plus>(&tpi),
             [=] (Index_type i,

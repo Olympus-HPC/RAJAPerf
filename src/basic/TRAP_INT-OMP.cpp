@@ -79,7 +79,7 @@ void TRAP_INT::runOpenMPVariant(VariantID vid, size_t tune_idx)
 
     case RAJA_OpenMP : {
 
-      RAJA::resources::Host res;
+      auto res{getHostResource()}; 
 
       if (tune_idx == 0) {
 
@@ -88,7 +88,7 @@ void TRAP_INT::runOpenMPVariant(VariantID vid, size_t tune_idx)
 
           RAJA::ReduceSum<RAJA::omp_reduce, Real_type> sumx(m_sumx_init);
 
-          RAJA::forall<RAJA::omp_parallel_for_exec>(res,
+          RAJA::forall<RAJA::omp_parallel_for_exec>( res,
             RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
             TRAP_INT_BODY;
           });
@@ -105,7 +105,7 @@ void TRAP_INT::runOpenMPVariant(VariantID vid, size_t tune_idx)
 
           Real_type tsumx = m_sumx_init;
 
-          RAJA::forall<RAJA::omp_parallel_for_exec>(res,
+          RAJA::forall<RAJA::omp_parallel_for_exec>( res,
             RAJA::RangeSegment(ibegin, iend),
             RAJA::expt::Reduce<RAJA::operators::plus>(&tsumx),
             [=] (Index_type i,
