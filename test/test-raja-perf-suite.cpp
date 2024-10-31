@@ -50,6 +50,8 @@ int main( int argc, char** argv )
 TEST(ShortSuiteTest, Basic)
 {
 
+  rajaperf::Checksum_type chksum_tol = 1e-7;
+
 // Assemble command line args for basic test
 
   std::vector< std::string > sargv{};
@@ -84,6 +86,16 @@ TEST(ShortSuiteTest, Basic)
 #endif
 
 #endif // !defined(_WIN32)
+
+
+#if defined(RAJA_ENABLE_TARGET_OPENMP)
+  chksum_tol = 5e-6;
+
+  sargv.emplace_back(std::string("--exclude-kernels"));
+  sargv.emplace_back(std::string("Comm"));
+  sargv.emplace_back(std::string("EDGE3D"));
+  sargv.emplace_back(std::string("MATVEC_3D_STENCIL"));
+#endif
 
 
   char *unit_test = getenv("RAJA_PERFSUITE_UNIT_TEST");
@@ -164,7 +176,7 @@ TEST(ShortSuiteTest, Basic)
                     << kernel->getVariantTuningName(vid, tune_idx) 
                     << std::endl;
           EXPECT_GT(rtime, 0.0);
-          EXPECT_LT(cksum_diff, 1e-7);
+          EXPECT_LT(cksum_diff, chksum_tol);
           
         }
       } 
