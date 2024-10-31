@@ -73,7 +73,7 @@ void MUL::runHipVariantImpl(VariantID vid)
       constexpr size_t shmem = 0;
 
       RPlaunchHipKernel( (lambda_hip_forall<block_size,
-                                             decltype(mul_lambda)>),
+                                            decltype(mul_lambda)>),
                          grid_size, block_size,
                          shmem, res.get_stream(),
                          ibegin, iend, mul_lambda );

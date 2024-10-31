@@ -50,6 +50,8 @@ void LTIMES::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG(tu
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+    auto res{getOmpTargetResource()};
+
     LTIMES_VIEWS_RANGES_RAJA;
 
     using EXEC_POL =
@@ -65,10 +67,11 @@ void LTIMES::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG(tu
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-      RAJA::kernel<EXEC_POL>( RAJA::make_tuple(IDRange(0, num_d),
-                                               IZRange(0, num_z),
-                                               IGRange(0, num_g),
-                                               IMRange(0, num_m)),
+      RAJA::kernel_resource<EXEC_POL>( RAJA::make_tuple(IDRange(0, num_d),
+                                                        IZRange(0, num_z),
+                                                        IGRange(0, num_g),
+                                                        IMRange(0, num_m)),
+        res,
         [=] (ID d, IZ z, IG g, IM m) {
         LTIMES_BODY_RAJA;
       });

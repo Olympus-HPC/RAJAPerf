@@ -230,6 +230,8 @@ void HALO_EXCHANGE_FUSED::runSeqVariantWorkGroup(VariantID vid)
 #if defined(RUN_RAJA_SEQ)
     case RAJA_Seq : {
 
+      auto res{getHostResource()};
+
       using AllocatorHolder = RAJAPoolAllocatorHolder<
         RAJA::basic_mempool::MemPool<RAJA::basic_mempool::generic_allocator>>;
       using Allocator = AllocatorHolder::Allocator<char>;
@@ -288,7 +290,7 @@ void HALO_EXCHANGE_FUSED::runSeqVariantWorkGroup(VariantID vid)
           }
         }
         workgroup group_pack = pool_pack.instantiate();
-        worksite site_pack = group_pack.run();
+        worksite site_pack = group_pack.run(res);
         if (separate_buffers) {
           for (Index_type l = 0; l < num_neighbors; ++l) {
             Index_type len = pack_index_list_lengths[l];
@@ -322,7 +324,7 @@ void HALO_EXCHANGE_FUSED::runSeqVariantWorkGroup(VariantID vid)
           }
         }
         workgroup group_unpack = pool_unpack.instantiate();
-        worksite site_unpack = group_unpack.run();
+        worksite site_unpack = group_unpack.run(res);
 
         MPI_Waitall(num_neighbors, pack_mpi_requests.data(), MPI_STATUSES_IGNORE);
 

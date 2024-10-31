@@ -52,10 +52,12 @@ void ATOMIC::runOpenMPTargetVariantReplicate(VariantID vid)
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+    auto res{getOmpTargetResource()};
+
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-      RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>(
+      RAJA::forall<RAJA::omp_target_parallel_for_exec<threads_per_team>>( res,
         RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
           ATOMIC_RAJA_BODY(RAJA::omp_atomic, i, ATOMIC_VALUE);
       });

@@ -50,6 +50,8 @@ void LTIMES_NOVIEW::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED
 
   } else if ( vid == RAJA_OpenMPTarget ) {
 
+    auto res{getOmpTargetResource()};
+
     using EXEC_POL =
       RAJA::KernelPolicy<
         RAJA::statement::Collapse<RAJA::omp_target_parallel_collapse_exec,
@@ -63,10 +65,12 @@ void LTIMES_NOVIEW::runOpenMPTargetVariant(VariantID vid, size_t RAJAPERF_UNUSED
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-      RAJA::kernel<EXEC_POL>( RAJA::make_tuple(RAJA::RangeSegment(0, num_d),
-                                               RAJA::RangeSegment(0, num_z),
-                                               RAJA::RangeSegment(0, num_g),
-                                               RAJA::RangeSegment(0, num_m)),
+      RAJA::kernel_resource<EXEC_POL>(
+        RAJA::make_tuple(RAJA::RangeSegment(0, num_d),
+                         RAJA::RangeSegment(0, num_z),
+                         RAJA::RangeSegment(0, num_g),
+                         RAJA::RangeSegment(0, num_m)),
+        res,
         [=] (Index_type d, Index_type z, Index_type g, Index_type m) {
         LTIMES_NOVIEW_BODY;
       });
