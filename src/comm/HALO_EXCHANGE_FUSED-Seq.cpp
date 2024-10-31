@@ -324,7 +324,7 @@ void HALO_EXCHANGE_FUSED::runSeqVariantWorkGroup(VariantID vid)
           }
         }
         workgroup group_unpack = pool_unpack.instantiate();
-        worksite site_unpack = group_unpack.run(run);
+        worksite site_unpack = group_unpack.run(res);
 
         MPI_Waitall(num_neighbors, pack_mpi_requests.data(), MPI_STATUSES_IGNORE);
 
