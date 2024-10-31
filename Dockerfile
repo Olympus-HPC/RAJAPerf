@@ -86,7 +86,8 @@ RUN cmake -DCMAKE_CXX_COMPILER=clang++ -DCMAKE_BUILD_TYPE=Release -DENABLE_OPENM
     make -j 6 &&\
     ctest -T test --output-on-failure
 
-## TODO: Investigate checksum errors with intel compiler
+## TODO: Checksum errors with intel compiler appear to be due to optimization
+##       level. On LC, cutting back to -O1 seems to fix the issues
 ##       Check compile, but don't run tests
 FROM ghcr.io/llnl/radiuss:ubuntu-20.04-intel-2024.0 AS intel2024
 ENV GTEST_COLOR=1
@@ -98,7 +99,8 @@ RUN /bin/bash -c "source /opt/intel/oneapi/setvars.sh 2>&1 > /dev/null && \
 ##  make -j 16 &&\
 ##  ctest -T test --output-on-failure"
 
-## TODO: Investigate checksum errors with intel compiler
+## TODO: Checksum errors with intel compiler appear to be due to optimization
+##       level. On LC, cutting back to -O1 seems to fix the issues
 ##       Check compile, but don't run tests
 FROM ghcr.io/llnl/radiuss:ubuntu-20.04-intel-2024.0 AS intel2024_debug
 ENV GTEST_COLOR=1
@@ -114,41 +116,21 @@ RUN /bin/bash -c "source /opt/intel/oneapi/setvars.sh 2>&1 > /dev/null && \
 ## Need to find a viable cuda image to test...
 ##
 
-# TODO: We should switch to ROCm 6 -- where to get an image??
-FROM ghcr.io/llnl/radiuss:ubuntu-20.04-hip-5.6.1 AS rocm5.6
+FROM ghcr.io/llnl/radiuss:hip-6.0.2-ubuntu-20.04 AS rocm6
 ENV GTEST_COLOR=1
 ENV HCC_AMDGPU_TARGET=gfx900
 COPY . /home/raja/workspace
 WORKDIR /home/raja/workspace/build
-RUN cmake -DCMAKE_CXX_COMPILER=/opt/rocm-5.6.1/bin/amdclang++ -DCMAKE_BUILD_TYPE=Release -DENABLE_HIP=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=Off .. && \
-    make -j 6
+RUN cmake -DCMAKE_CXX_COMPILER=/opt/rocm-6.0.2/bin/amdclang++ -DROCM_PATH=/opt/rocm-6.0.2 -DCMAKE_BUILD_TYPE=Release -DENABLE_HIP=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=Off .. && \
+    make -j 16
 
-# TODO: We should switch to ROCm 6 -- where to get an image??
-FROM ghcr.io/llnl/radiuss:ubuntu-20.04-hip-5.6.1 AS rocm5.6_desul
+FROM ghcr.io/llnl/radiuss:hip-6.0.2-ubuntu-20.04 AS rocm6_desul
 ENV GTEST_COLOR=1
 ENV HCC_AMDGPU_TARGET=gfx900
 COPY . /home/raja/workspace
 WORKDIR /home/raja/workspace/build
-RUN cmake -DCMAKE_CXX_COMPILER=/opt/rocm-5.6.1/bin/amdclang++ -DCMAKE_BUILD_TYPE=Release -DENABLE_HIP=On -DRAJA_ENABLE_DESUL_ATOMICS=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=Off .. && \
-    make -j 6
-
-## ROCm 6 image is broken
-FROM ghcr.io/llnl/radiuss:hip-6.0.2-ubuntu-20.04 AS rocm6.0
-ENV GTEST_COLOR=1
-ENV HCC_AMDGPU_TARGET=gfx900
-COPY . /home/raja/workspace
-WORKDIR /home/raja/workspace/build
-RUN cmake -DCMAKE_CXX_COMPILER=/opt/rocm-6.0.2/bin/amdclang++ -DCMAKE_BUILD_TYPE=Release -DENABLE_HIP=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=Off .. && \
-    make -j 6
-
-## ROCm 6 image is broken
-FROM ghcr.io/llnl/radiuss:hip-6.0.2-ubuntu-20.04 AS rocm6.0_desul
-ENV GTEST_COLOR=1
-ENV HCC_AMDGPU_TARGET=gfx900
-COPY . /home/raja/workspace
-WORKDIR /home/raja/workspace/build
-RUN cmake -DCMAKE_CXX_COMPILER=/opt/rocm-6.0.2/bin/amdclang++ -DCMAKE_BUILD_TYPE=Release -DENABLE_HIP=On -DRAJA_ENABLE_DESUL_ATOMICS=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=Off .. && \
-    make -j 6
+RUN cmake -DCMAKE_CXX_COMPILER=/opt/rocm-6.0.2/bin/amdclang++ -DROCM_PATH=/opt/rocm-6.0.2 -DCMAKE_BUILD_TYPE=Release -DENABLE_HIP=On -DRAJA_ENABLE_DESUL_ATOMICS=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=Off .. && \
+    make -j 16
 
 FROM ghcr.io/llnl/radiuss:intel-2024.0-ubuntu-20.04 AS intel2024_sycl
 ENV GTEST_COLOR=1
