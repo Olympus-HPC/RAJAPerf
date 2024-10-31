@@ -87,8 +87,8 @@ void FIRST_MIN::runSyclVariantImpl(VariantID vid)
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-       RAJA::expt::ValLoc<Real_type, RAJA::Index_type> tminloc(m_xmin_init,
-                                                               m_initloc);
+       RAJA::expt::ValLoc<Real_type, Index_type> tminloc(m_xmin_init,
+                                                         m_initloc);
 
        RAJA::forall< RAJA::sycl_exec<work_group_size, true /*async*/> >(
          res,
@@ -97,7 +97,7 @@ void FIRST_MIN::runSyclVariantImpl(VariantID vid)
          [=]  (Index_type i,
            RAJA::expt::ValLocOp<Real_type, Index_type,
                                  RAJA::operators::minimum>& minloc) {
-           minloc.minloc(x[i], i);
+           FIRST_MIN_BODY_RAJA;
          }
        );
 

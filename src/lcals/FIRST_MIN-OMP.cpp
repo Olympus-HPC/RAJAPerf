@@ -94,15 +94,16 @@ void FIRST_MIN::runOpenMPVariant(VariantID vid, size_t tune_idx)
         startTimer();
         for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
   
-          RAJA::ReduceMinLoc<RAJA::omp_reduce, Real_type, Index_type> loc(
-                                                          m_xmin_init, m_initloc);
+          RAJA::ReduceMinLoc<RAJA::omp_reduce,
+                             Real_type, Index_type> minloc(m_xmin_init,
+                                                           m_initloc);
 
           RAJA::forall<RAJA::omp_parallel_for_exec>(res,
             RAJA::RangeSegment(ibegin, iend), [=](Index_type i) {
             FIRST_MIN_BODY_RAJA;
           });
 
-          m_minloc = loc.getLoc();
+          m_minloc = minloc.getLoc();
 
         }
         stopTimer();
@@ -112,8 +113,8 @@ void FIRST_MIN::runOpenMPVariant(VariantID vid, size_t tune_idx)
         startTimer();
         for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-          RAJA::expt::ValLoc<Real_type, RAJA::Index_type> tminloc(m_xmin_init,
-                                                                  m_initloc);
+          RAJA::expt::ValLoc<Real_type, Index_type> tminloc(m_xmin_init,
+                                                            m_initloc);
 
           RAJA::forall<RAJA::omp_parallel_for_exec>(res,
             RAJA::RangeSegment(ibegin, iend),
@@ -121,7 +122,7 @@ void FIRST_MIN::runOpenMPVariant(VariantID vid, size_t tune_idx)
             [=](Index_type i,
               RAJA::expt::ValLocOp<Real_type, Index_type,
                                    RAJA::operators::minimum>& minloc) {
-              minloc.minloc(x[i], i);
+              FIRST_MIN_BODY_RAJA;
             }
           );
 
