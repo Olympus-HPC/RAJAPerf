@@ -76,6 +76,8 @@ TEST(ShortSuiteTest, Basic)
 #if !defined(_WIN32)
 
 #if defined(RAJA_ENABLE_TARGET_OPENMP)
+  // checksum tolerance reduced b/c bas omp target variant of JACOBI_1D
+  // kernel result is off
   chksum_tol = 5e-6;
 
   sargv.emplace_back(std::string("--exclude-kernels"));
