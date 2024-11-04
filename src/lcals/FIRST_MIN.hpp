@@ -33,7 +33,7 @@
   }
 
 #define FIRST_MIN_BODY_RAJA  \
-  loc.minloc(x[i], i);
+  minloc.minloc(x[i], i);
 
 
 #include "common/RPTypes.hpp"

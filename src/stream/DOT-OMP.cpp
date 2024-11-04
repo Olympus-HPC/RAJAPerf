@@ -105,7 +105,8 @@ void DOT::runOpenMPVariant(VariantID vid, size_t tune_idx)
           RAJA::forall<RAJA::omp_parallel_for_exec>( res,
             RAJA::RangeSegment(ibegin, iend),
             RAJA::expt::Reduce<RAJA::operators::plus>(&tdot),
-            [=] (Index_type i, Real_type& dot) {
+            [=] (Index_type i,
+              RAJA::expt::ValOp<Real_type, RAJA::operators::plus>& dot) {
               DOT_BODY;
             }
           );
