@@ -160,9 +160,9 @@ if (RAJA_ENABLE_SYCL)
 endif()
 
 # Kokkos requires hipcc as the CMAKE_CXX_COMPILER for HIP AMD/VEGA GPU
-# platforms, whereas RAJAPerf Suite uses blt/CMake FindHIP to set HIP compiler. 
+# platforms, whereas RAJAPerf Suite uses blt/CMake FindHIP to set HIP compiler.
 # Separate RAJAPerf Suite and Kokkos handling of HIP compilers
-
+set(ENABLE_JIT ON CACHE BOOL "")
 if ((ENABLE_HIP) AND (NOT ENABLE_KOKKOS))
   message(STATUS "HIP version: ${hip_VERSION}")
   if("${hip_VERSION}" VERSION_LESS "3.5")
@@ -269,6 +269,10 @@ Kokkos_ENABLE_HIP variable to ON")
   get_property(KOKKOS_INCLUDE_DIRS DIRECTORY tpl/kokkos PROPERTY INCLUDE_DIRECTORIES)
   include_directories(${KOKKOS_INCLUDE_DIRS})
   list(APPEND RAJA_PERFSUITE_DEPENDS kokkos)
+endif()
+
+if (ENABLE_JIT)
+  add_subdirectory(tpl/RAJA/tpl/proteus)
 endif()
 
 add_subdirectory(src)
