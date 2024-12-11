@@ -272,7 +272,7 @@ Kokkos_ENABLE_HIP variable to ON")
 endif()
 
 if (ENABLE_JIT)
-  add_subdirectory(tpl/proteus)
+  add_subdirectory(tpl/RAJA/tpl/proteus)
 endif()
 
 add_subdirectory(src)
