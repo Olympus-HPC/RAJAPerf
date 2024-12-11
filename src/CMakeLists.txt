@@ -68,7 +68,7 @@ blt_add_executable(
   apps/LTIMES_NOVIEW-OMPTarget.cpp
   apps/MASS3DEA.cpp
   apps/MASS3DEA-Seq.cpp
-  apps/MASS3DEA-OMPTarget.cpp  
+  apps/MASS3DEA-OMPTarget.cpp
   apps/MASS3DPA.cpp
   apps/MASS3DPA-Seq.cpp
   apps/MASS3DPA-OMPTarget.cpp
@@ -283,9 +283,33 @@ else()
 blt_add_executable(
   NAME raja-perf.exe
   SOURCES RAJAPerfSuiteDriver.cpp
-  INCLUDES ${PROJECT_BINARY_DIR}/include
+  INCLUDES ${PROJECT_BINARY_DIR}/include ${LLVM_INCLUDE_DIRS}
   DEPENDS_ON ${RAJA_PERFSUITE_EXECUTABLE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  set_source_files_properties(RAJAPerfSuiteDriver.cpp PROPERTIES
+  OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/tpl/proteus/pass/ProteusPass.cpp
+  )
+  add_dependencies(raja-perf.exe proteus ProteusPass)
+  target_link_libraries(raja-perf.exe  PRIVATE proteus)
+  if(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "ppc64le")
+      set(NATIVE_OPT_FLAGS "-mcpu=native" "-mtune=native")
+  else()
+      set(NATIVE_OPT_FLAGS "-march=native")
+  endif()
+
+  target_compile_options(
+    raja-perf.exe
+    PUBLIC
+    -fpass-plugin=$<TARGET_FILE:ProteusPass>
+    #-fno-rtti
+    ${NATIVE_OPT_FLAGS}
+  )
+
+  target_link_options(raja-perf.exe PRIVATE
+  -rdynamic)
+  endif()
 install( TARGETS raja-perf.exe
          RUNTIME DESTINATION bin
        )
