@@ -289,7 +289,7 @@ blt_add_executable(
 
 if (ENABLE_JIT)
   set_source_files_properties(RAJAPerfSuiteDriver.cpp PROPERTIES
-  OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/tpl/proteus/pass/ProteusPass.cpp
+  OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/tpl/RAJA/tpl/proteus/pass/ProteusPass.cpp
   )
   add_dependencies(raja-perf.exe proteus ProteusPass)
   target_link_libraries(raja-perf.exe  PRIVATE proteus)

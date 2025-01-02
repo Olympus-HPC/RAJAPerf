@@ -41,3 +41,14 @@ blt_add_library(
           HALO_EXCHANGE_FUSED-OMPTarget.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_dependencies(comm proteus ProteusPass)
+  target_link_libraries(comm  PUBLIC proteus)
+  target_compile_options(
+        comm
+        PUBLIC
+        -fpass-plugin=$<TARGET_FILE:ProteusPass>
+        ${NATIVE_OPT_FLAGS}
+      )
+endif()

@@ -87,3 +87,15 @@ blt_add_library(
 	  TRIDIAG_ELIM-Sycl.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_dependencies(lcals proteus ProteusPass)
+  target_link_libraries(lcals  PUBLIC proteus)
+  target_compile_options(
+        lcals
+        PUBLIC
+        -fpass-plugin=$<TARGET_FILE:ProteusPass>
+        ${NATIVE_OPT_FLAGS}
+      )
+endif()
+

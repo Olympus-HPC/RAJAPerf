@@ -137,3 +137,14 @@ blt_add_library(
           MULTI_REDUCE-OMPTarget.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_dependencies(basic proteus ProteusPass)
+  target_link_libraries(basic  PUBLIC proteus)
+  target_compile_options(
+        basic
+        PUBLIC
+        -fpass-plugin=$<TARGET_FILE:ProteusPass>
+        ${NATIVE_OPT_FLAGS}
+      )
+endif()

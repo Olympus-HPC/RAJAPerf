@@ -57,3 +57,14 @@ blt_add_library(
           HISTOGRAM-OMPTarget.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_dependencies(algorithm proteus ProteusPass)
+  target_link_libraries(algorithm  PUBLIC proteus)
+  target_compile_options(
+        algorithm
+        PUBLIC
+        -fpass-plugin=$<TARGET_FILE:ProteusPass>
+        ${NATIVE_OPT_FLAGS}
+      )
+endif()

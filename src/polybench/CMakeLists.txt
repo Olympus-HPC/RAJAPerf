@@ -101,3 +101,14 @@ blt_add_library(
           POLYBENCH_MVT-Sycl.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_dependencies(polybench proteus ProteusPass)
+  target_link_libraries(polybench  PUBLIC proteus)
+  target_compile_options(
+        polybench
+        PUBLIC
+        -fpass-plugin=$<TARGET_FILE:ProteusPass>
+        ${NATIVE_OPT_FLAGS}
+      )
+endif()
