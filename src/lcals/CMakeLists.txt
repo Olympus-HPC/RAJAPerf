@@ -89,13 +89,6 @@ blt_add_library(
   )
 
 if (ENABLE_JIT)
-  add_dependencies(lcals proteus ProteusPass)
-  target_link_libraries(lcals  PUBLIC proteus)
-  target_compile_options(
-        lcals
-        PUBLIC
-        -fpass-plugin=$<TARGET_FILE:ProteusPass>
-        ${NATIVE_OPT_FLAGS}
-      )
+  add_proteus(lcals)
 endif()
 

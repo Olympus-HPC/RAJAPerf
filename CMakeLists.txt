@@ -16,6 +16,7 @@ else()
 endif()
 
 option(ENABLE_KOKKOS "Include Kokkos implementations of the kernels in the RAJA Perfsuite" Off)
+option(ENABLE_JIT "Enable JIT compilation via proteus via either submodule or install" On)
 
 if (ENABLE_KOKKOS OR RAJA_ENABLE_SYCL)
   set(CMAKE_CXX_STANDARD 17)
@@ -272,7 +273,11 @@ Kokkos_ENABLE_HIP variable to ON")
 endif()
 
 if (ENABLE_JIT)
-  add_subdirectory(tpl/RAJA/tpl/proteus)
+  if (NOT "${PROTEUS_INSTALL_DIR}" STREQUAL "")
+    find_package(proteus REQUIRED PATHS "${PROTEUS_INSTALL_DIR}")
+  else()
+    add_subdirectory(tpl/RAJA/tpl/proteus)
+  endif()
 endif()
 
 add_subdirectory(src)

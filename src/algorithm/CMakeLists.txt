@@ -59,12 +59,5 @@ blt_add_library(
   )
 
 if (ENABLE_JIT)
-  add_dependencies(algorithm proteus ProteusPass)
-  target_link_libraries(algorithm  PUBLIC proteus)
-  target_compile_options(
-        algorithm
-        PUBLIC
-        -fpass-plugin=$<TARGET_FILE:ProteusPass>
-        ${NATIVE_OPT_FLAGS}
-      )
+  add_proteus(algorithm)
 endif()
