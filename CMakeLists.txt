@@ -226,8 +226,8 @@ else()
   set(RAJAPERF_COMPILER_OPTIONS "${CMAKE_CXX_FLAGS_${RAJAPERF_BUILD_TYPE}}")
   list(APPEND RAJAPERF_COMPILER_OPTIONS ${CMAKE_CXX_FLAGS})
 endif()
-
-configure_file(${CMAKE_SOURCE_DIR}/src/rajaperf_config.hpp.in
+message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/rajaperf_config.hpp.in
   ${CMAKE_CURRENT_BINARY_DIR}/include/rajaperf_config.hpp)
 
 include_directories($<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>)

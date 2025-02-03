@@ -287,9 +287,9 @@ blt_add_executable(
   DEPENDS_ON ${RAJA_PERFSUITE_EXECUTABLE_DEPENDS}
   )
 
-if (ENABLE_JIT)
+  if (ENABLE_JIT)
   set_source_files_properties(RAJAPerfSuiteDriver.cpp PROPERTIES
-  OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/tpl/RAJA/tpl/proteus/pass/ProteusPass.cpp
+  OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/pass/ProteusPass.cpp
   )
   add_dependencies(raja-perf.exe proteus ProteusPass)
   target_link_libraries(raja-perf.exe  PRIVATE proteus)
@@ -299,16 +299,8 @@ if (ENABLE_JIT)
       set(NATIVE_OPT_FLAGS "-march=native")
   endif()
 
-  target_compile_options(
-    raja-perf.exe
-    PUBLIC
-    -fpass-plugin=$<TARGET_FILE:ProteusPass>
-    #-fno-rtti
-    ${NATIVE_OPT_FLAGS}
-  )
+  add_proteus(raja-perf.exe)
 
-  target_link_options(raja-perf.exe PRIVATE
-  -rdynamic)
   endif()
 install( TARGETS raja-perf.exe
          RUNTIME DESTINATION bin
