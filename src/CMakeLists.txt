@@ -287,21 +287,9 @@ blt_add_executable(
   DEPENDS_ON ${RAJA_PERFSUITE_EXECUTABLE_DEPENDS}
   )
 
-  if (ENABLE_JIT)
-  set_source_files_properties(RAJAPerfSuiteDriver.cpp PROPERTIES
-  OBJECT_DEPENDS ${CMAKE_SOURCE_DIR}/pass/ProteusPass.cpp
-  )
-  add_dependencies(raja-perf.exe proteus ProteusPass)
-  target_link_libraries(raja-perf.exe  PRIVATE proteus)
-  if(${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "ppc64le")
-      set(NATIVE_OPT_FLAGS "-mcpu=native" "-mtune=native")
-  else()
-      set(NATIVE_OPT_FLAGS "-march=native")
-  endif()
-
+if (ENABLE_JIT)
   add_proteus(raja-perf.exe)
-
-  endif()
+endif()
 install( TARGETS raja-perf.exe
          RUNTIME DESTINATION bin
        )
