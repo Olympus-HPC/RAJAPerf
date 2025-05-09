@@ -11,6 +11,7 @@
 #endif
 
 #include "common/Executor.hpp"
+#include "proteus/JitInterface.hpp"
 
 #include <iostream>
 
@@ -21,6 +22,7 @@
 //------------------------------------------------------------------------------
 int main( int argc, char** argv )
 {
+  proteus::init();
 #if defined(RAJA_PERFSUITE_ENABLE_MPI)
   MPI_Init(&argc, &argv);
 
@@ -56,6 +58,6 @@ int main( int argc, char** argv )
 #if defined(RAJA_PERFSUITE_ENABLE_MPI)
   MPI_Finalize();
 #endif
-
+proteus::finalize();
   return 0;
 }

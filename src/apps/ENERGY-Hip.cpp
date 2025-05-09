@@ -194,32 +194,33 @@ void ENERGY::runHipVariantImpl(VariantID vid)
       RAJA::region<RAJA::seq_region>( [=]() {
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY1;
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY2;
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY3;
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=, e_cut = proteus::jit_variable(e_cut), 
+            emin = proteus::jit_variable(emin)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY4;
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY5;
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=, q_cut = proteus::jit_variable(q_cut)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY6;
         });
 

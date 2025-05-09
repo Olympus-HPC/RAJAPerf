@@ -114,7 +114,7 @@ void DEL_DOT_VEC_2D::runCudaVariantImpl(VariantID vid)
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
       RAJA::forall< RAJA::cuda_exec<block_size, true /*async*/> >( res,
-         zones, [=] __device__ (Index_type i) {
+         zones, [=, half = proteus::jit_variable(half), ptiny=proteus::jit_variable(ptiny)] __device__   __attribute__((annotate("jit"))) (Index_type i) {
          DEL_DOT_VEC_2D_BODY;
        });
 

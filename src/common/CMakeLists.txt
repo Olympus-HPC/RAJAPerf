@@ -17,3 +17,7 @@ blt_add_library(
   INCLUDES ${PROJECT_BINARY_DIR}/include/
   DEPENDS_ON ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT) 
+        add_proteus(common)
+endif()
