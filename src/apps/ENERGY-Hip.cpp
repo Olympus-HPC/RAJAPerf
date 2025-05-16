@@ -199,7 +199,7 @@ void ENERGY::runHipVariantImpl(VariantID vid)
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=, rho0 = proteus::jit_variable(rho0)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY2;
         });
 
@@ -220,7 +220,9 @@ void ENERGY::runHipVariantImpl(VariantID vid)
         });
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=, q_cut = proteus::jit_variable(q_cut)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), 
+          [=, q_cut = proteus::jit_variable(q_cut), rho0 = proteus::jit_variable(rho0)]
+            __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY6;
         });
 

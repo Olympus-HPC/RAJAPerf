@@ -179,7 +179,7 @@ void CONVECTION3DPA::runCudaVariantImpl(VariantID vid) {
       RAJA::launch<launch_policy>( res,
           RAJA::LaunchParams(RAJA::Teams(NE),
                            RAJA::Threads(CPA_Q1D, CPA_Q1D, CPA_Q1D)),
-          [=] RAJA_HOST_DEVICE(RAJA::LaunchContext ctx) {
+          [=] RAJA_HOST_DEVICE  __attribute__((annotate("jit"))) (RAJA::LaunchContext ctx) {
 
           RAJA::loop<outer_x>(ctx, RAJA::RangeSegment(0, NE),
             [&](int e) {

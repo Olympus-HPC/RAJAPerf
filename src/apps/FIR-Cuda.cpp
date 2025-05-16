@@ -128,7 +128,7 @@ void FIR::runCudaVariantImpl(VariantID vid)
     FIR_COEFF;
 
     FIR_DATA_SETUP_CUDA;
-    std::cout << "kword " << coefflen << std::endl;
+
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 

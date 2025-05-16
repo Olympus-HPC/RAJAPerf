@@ -81,7 +81,7 @@ void NODAL_ACCUMULATION_3D::runCudaVariantImpl(VariantID vid)
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
       RAJA::forall< RAJA::cuda_exec<block_size, true /*async*/> >( res,
-        zones, [=] __device__ (Index_type i) {
+        zones, [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           NODAL_ACCUMULATION_3D_RAJA_ATOMIC_BODY(RAJA::cuda_atomic);
       });
 
