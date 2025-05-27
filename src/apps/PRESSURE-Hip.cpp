@@ -94,11 +94,13 @@ void PRESSURE::runHipVariantImpl(VariantID vid)
       RAJA::region<RAJA::seq_region>( [=]() {
 
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=, cls = proteus::jit_variable(cls)] __device__  __attribute__((annotate("jit"))) (Index_type i) {
           PRESSURE_BODY1;
         });
         RAJA::forall< RAJA::hip_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), 
+          [=, p_cut = proteus::jit_variable(p_cut), eosvmax = proteus::jit_variable(eosvmax), 
+            pmin = proteus::jit_variable(pmin)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           PRESSURE_BODY2;
         });
 

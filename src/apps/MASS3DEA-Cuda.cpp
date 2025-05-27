@@ -105,7 +105,7 @@ void MASS3DEA::runCudaVariantImpl(VariantID vid) {
       RAJA::launch<launch_policy>( res,
         RAJA::LaunchParams(RAJA::Teams(NE),
                          RAJA::Threads(MEA_D1D, MEA_D1D, MEA_D1D)),
-        [=] RAJA_HOST_DEVICE(RAJA::LaunchContext ctx) {
+        [=] RAJA_HOST_DEVICE __attribute__((annotate("jit"))) (RAJA::LaunchContext ctx) {
 
           RAJA::loop<outer_x>(ctx, RAJA::RangeSegment(0, NE),
             [&](int e) {
@@ -150,7 +150,7 @@ void MASS3DEA::runCudaVariantImpl(VariantID vid) {
                   RAJA::loop<inner_y>(ctx, RAJA::RangeSegment(0, MEA_D1D),
                     [&](int i2) {
                       RAJA::loop<inner_z>(ctx, RAJA::RangeSegment(0, MEA_D1D),
-                        [&](int i3) {
+                        [&] (int i3) {
                           MASS3DEA_4
                         }
                       ); // RAJA::loop<inner_x>

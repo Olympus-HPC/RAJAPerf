@@ -9,6 +9,7 @@
 #include "POLYBENCH_JACOBI_2D.hpp"
 
 #include "RAJA/RAJA.hpp"
+#include <proteus/JitInterface.hpp>
 
 #include <iostream>
 
@@ -18,6 +19,10 @@ namespace rajaperf
 namespace polybench
 {
 
+template <typename F> void run(F &&Func) {
+  proteus::register_lambda(Func);
+  Func();
+}
 
 void POLYBENCH_JACOBI_2D::runSeqVariant(VariantID vid, size_t RAJAPERF_UNUSED_ARG(tune_idx))
 {
@@ -30,6 +35,11 @@ void POLYBENCH_JACOBI_2D::runSeqVariant(VariantID vid, size_t RAJAPERF_UNUSED_AR
     case Base_Seq : {
 
       startTimer();
+      run([=
+                , run_reps = proteus::jit_variable(run_reps), 
+                N = proteus::jit_variable(N),
+                tsteps = proteus::jit_variable(tsteps) 
+              ]() __attribute__((annotate("jit"))) {
       for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
         for (Index_type t = 0; t < tsteps; ++t) {
@@ -48,6 +58,7 @@ void POLYBENCH_JACOBI_2D::runSeqVariant(VariantID vid, size_t RAJAPERF_UNUSED_AR
         }
 
       }
+    });
       stopTimer();
 
       break;

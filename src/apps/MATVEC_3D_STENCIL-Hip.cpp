@@ -184,7 +184,7 @@ void MATVEC_3D_STENCIL::runHipVariantImpl(VariantID vid)
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
       RAJA::forall< RAJA::hip_exec<block_size, true /*async*/> >( res,
-        zones, [=] __device__ (Index_type i) {
+        zones, [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           MATVEC_3D_STENCIL_BODY;
       });
 

@@ -283,7 +283,7 @@ else()
 blt_add_executable(
   NAME raja-perf.exe
   SOURCES RAJAPerfSuiteDriver.cpp
-  INCLUDES ${PROJECT_BINARY_DIR}/include ${LLVM_INCLUDE_DIRS}
+  INCLUDES ${PROJECT_BINARY_DIR}/include ${LLVM_INCLUDE_DIRS} 
   DEPENDS_ON ${RAJA_PERFSUITE_EXECUTABLE_DEPENDS}
   )
 

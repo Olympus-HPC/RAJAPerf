@@ -93,7 +93,8 @@ void INIT_VIEW1D_OFFSET::runHipVariantImpl(VariantID vid)
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
       RAJA::forall< RAJA::hip_exec<block_size, true /*async*/> >( res,
-        RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+        RAJA::RangeSegment(ibegin, iend), [=, v = proteus::jit_variable(v)]
+        __device__ __attribute__((annotate("jit"))) (Index_type i) {
         INIT_VIEW1D_OFFSET_BODY_RAJA;
       });
 

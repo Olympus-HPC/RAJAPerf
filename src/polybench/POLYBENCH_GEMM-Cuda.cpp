@@ -163,10 +163,10 @@ void POLYBENCH_GEMM::runCudaVariantImpl(VariantID vid)
           [=] __device__ (Real_type& dot) {
             POLYBENCH_GEMM_BODY1_RAJA;
           },
-          [=] __device__ (Index_type i, Index_type j) {
+          [=, beta = proteus::jit_variable(beta)] __device__ (Index_type i, Index_type j) {
             POLYBENCH_GEMM_BODY2_RAJA;
           },
-          [=] __device__ (Index_type i, Index_type j, Index_type k,
+          [=, alpha = proteus::jit_variable(alpha)] __device__ (Index_type i, Index_type j, Index_type k,
                           Real_type& dot) {
             POLYBENCH_GEMM_BODY3_RAJA;
           },

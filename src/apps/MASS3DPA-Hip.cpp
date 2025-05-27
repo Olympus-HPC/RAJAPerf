@@ -134,7 +134,8 @@ void MASS3DPA::runHipVariantImpl(VariantID vid) {
       RAJA::launch<launch_policy>( res,
         RAJA::LaunchParams(RAJA::Teams(NE),
                          RAJA::Threads(MPA_Q1D, MPA_Q1D, 1)),
-        [=] RAJA_HOST_DEVICE(RAJA::LaunchContext ctx) {
+        [=,  MQ1 = proteus::jit_variable(MQ1), MD1 = proteus::jit_variable(MD1), MDQ =proteus::jit_variable(MDQ)]
+         RAJA_HOST_DEVICE(RAJA::LaunchContext ctx) {
           RAJA::loop<outer_x>(ctx, RAJA::RangeSegment(0, NE),
             [&](int e) {
 

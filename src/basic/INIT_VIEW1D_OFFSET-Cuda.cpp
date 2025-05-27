@@ -69,7 +69,8 @@ void INIT_VIEW1D_OFFSET::runCudaVariantImpl(VariantID vid)
     startTimer();
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
-      auto initview1d_offset_lambda = [=] __device__ (Index_type i) {
+      auto initview1d_offset_lambda = [=, v = proteus::jit_variable(v)]
+       __device__ __attribute__((annotate("jit"))) (Index_type i) {
         INIT_VIEW1D_OFFSET_BODY;
       };
 

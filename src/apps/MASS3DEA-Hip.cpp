@@ -105,7 +105,7 @@ void MASS3DEA::runHipVariantImpl(VariantID vid) {
       RAJA::launch<launch_policy>( res,
         RAJA::LaunchParams(RAJA::Teams(NE),
                          RAJA::Threads(MEA_D1D, MEA_D1D, MEA_D1D)),
-        [=] RAJA_HOST_DEVICE(RAJA::LaunchContext ctx) {
+        [=] __attribute__((annotate("jit"))) RAJA_HOST_DEVICE(RAJA::LaunchContext ctx) {
 
           RAJA::loop<outer_x>(ctx, RAJA::RangeSegment(0, NE),
             [&](int e) {

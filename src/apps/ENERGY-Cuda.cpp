@@ -198,34 +198,34 @@ void ENERGY::runCudaVariantImpl(VariantID vid)
 #endif
 
         RAJA::forall< RAJA::cuda_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
-          ENERGY_BODY1;
-        });
+          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
+            ENERGY_BODY1;
+          });
 
         RAJA::forall< RAJA::cuda_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
-          ENERGY_BODY2;
-        });
+          RAJA::RangeSegment(ibegin, iend), [=, rho0 = proteus::jit_variable(rho0)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
+            ENERGY_BODY2;
+          });
 
         RAJA::forall< RAJA::cuda_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
-          ENERGY_BODY3;
-        });
+          RAJA::RangeSegment(ibegin, iend), [=] __device__ __attribute__((annotate("jit"))) (Index_type i) {
+            ENERGY_BODY3;
+          });
 
         RAJA::forall< RAJA::cuda_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+          RAJA::RangeSegment(ibegin, iend), [=, emin = proteus::jit_variable(emin), e_cut = proteus::jit_variable(e_cut)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
           ENERGY_BODY4;
         });
 
         RAJA::forall< RAJA::cuda_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
-          ENERGY_BODY5;
-        });
+          RAJA::RangeSegment(ibegin, iend), [=] __device__  __attribute__((annotate("jit"))) (Index_type i) {
+            ENERGY_BODY5;
+          });
 
         RAJA::forall< RAJA::cuda_exec<block_size, async> >( res,
-          RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
-          ENERGY_BODY6;
-        });
+          RAJA::RangeSegment(ibegin, iend), [=, q_cut = proteus::jit_variable(q_cut), rho0 = proteus::jit_variable(rho0)] __device__ __attribute__((annotate("jit"))) (Index_type i) {
+            ENERGY_BODY6;
+          });
 
 #if CUDART_VERSION >= 9000
       }); // end sequential region (for single-source code)

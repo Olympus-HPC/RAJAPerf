@@ -88,7 +88,7 @@
 
 // Number of Dofs/Qpts in 1D
 #define MEA_D1D 4
-#define MEA_Q1D 5
+#define MEA_Q1D 8
 #define B_MEA_(x, y) B[x + MEA_Q1D * y]
 #define M_(i1, i2, i3, j1, j2, j3, e)                                   \
   M[i1 + MEA_D1D * (i2 + MEA_D1D * (i3 + MEA_D1D * (j1 + MEA_D1D * (j2 + MEA_D1D * (j3 + MEA_D1D * e)))))]

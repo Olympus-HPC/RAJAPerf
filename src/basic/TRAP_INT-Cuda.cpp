@@ -175,7 +175,10 @@ void TRAP_INT::runCudaVariantRAJANewReduce(VariantID vid)
       RAJA::forall<exec_policy>( res,
         RAJA::RangeSegment(ibegin, iend),
         RAJA::expt::Reduce<RAJA::operators::plus>(&tsumx),
-        [=] __device__ (Index_type i,
+        [=, x0 = proteus::jit_variable(x0), h = proteus::jit_variable(h), 
+        y = proteus::jit_variable(y), yp = proteus::jit_variable(yp), 
+        xp = proteus::jit_variable(xp)]
+         __device__  __attribute__((annotate("jit")))  (Index_type i,
           RAJA::expt::ValOp<Real_type, RAJA::operators::plus>& sumx) {
           TRAP_INT_BODY;
         }

@@ -133,7 +133,8 @@ void FIR::runCudaVariantImpl(VariantID vid)
     for (RepIndex_type irep = 0; irep < run_reps; ++irep) {
 
        RAJA::forall< RAJA::cuda_exec<block_size, true /*async*/> >( res,
-         RAJA::RangeSegment(ibegin, iend), [=] __device__ (Index_type i) {
+         RAJA::RangeSegment(ibegin, iend), [=, coefflen=proteus::jit_variable(coefflen)] 
+         __device__ __attribute__((annotate("jit"))) (Index_type i) {
          FIR_BODY;
        });
 
