@@ -250,7 +250,7 @@ void POLYBENCH_GEMVER::runCudaVariantImpl(VariantID vid)
           RAJA::statement::For<0, RAJA::cuda_global_size_x_direct<block_size>,   // i
             RAJA::statement::Lambda<0, RAJA::Segs<0>, RAJA::Params<0>>,
             RAJA::statement::For<1, RAJA::seq_exec,             // j
-              RAJA::statement::Lambda<1, RAJA::Segs<0,1>, RAJA::Params<0>>,
+              RAJA::statement::Lambda<1, RAJA::Segs<0,1>, RAJA::Params<0>>
             >,
             RAJA::statement::Lambda<2, RAJA::Segs<0>, RAJA::Params<0>>
           >
