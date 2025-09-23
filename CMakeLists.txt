@@ -22,6 +22,7 @@ if (ENABLE_KOKKOS OR RAJA_ENABLE_SYCL)
   set(CMAKE_CXX_STANDARD 17)
   set(BLT_CXX_STD c++17)
 endif()
+add_compile_options(-Wno-unused-result)
 
 include(blt/SetupBLT.cmake)
 
