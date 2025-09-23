@@ -21,9 +21,6 @@ option(ENABLE_JIT "Enable JIT compilation via proteus via either submodule or in
 if (ENABLE_KOKKOS OR RAJA_ENABLE_SYCL)
   set(CMAKE_CXX_STANDARD 17)
   set(BLT_CXX_STD c++17)
-else()
-  set(CMAKE_CXX_STANDARD 14)
-  set(BLT_CXX_STD c++14)
 endif()
 
 include(blt/SetupBLT.cmake)
