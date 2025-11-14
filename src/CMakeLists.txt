@@ -68,7 +68,7 @@ blt_add_executable(
   apps/LTIMES_NOVIEW-OMPTarget.cpp
   apps/MASS3DEA.cpp
   apps/MASS3DEA-Seq.cpp
-  apps/MASS3DEA-OMPTarget.cpp  
+  apps/MASS3DEA-OMPTarget.cpp
   apps/MASS3DPA.cpp
   apps/MASS3DPA-Seq.cpp
   apps/MASS3DPA-OMPTarget.cpp
@@ -283,9 +283,13 @@ else()
 blt_add_executable(
   NAME raja-perf.exe
   SOURCES RAJAPerfSuiteDriver.cpp
-  INCLUDES ${PROJECT_BINARY_DIR}/include
+  INCLUDES ${PROJECT_BINARY_DIR}/include ${LLVM_INCLUDE_DIRS}
   DEPENDS_ON ${RAJA_PERFSUITE_EXECUTABLE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(raja-perf.exe)
+endif()
 install( TARGETS raja-perf.exe
          RUNTIME DESTINATION bin
        )

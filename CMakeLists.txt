@@ -16,14 +16,13 @@ else()
 endif()
 
 option(ENABLE_KOKKOS "Include Kokkos implementations of the kernels in the RAJA Perfsuite" Off)
+option(ENABLE_JIT "Enable JIT compilation via proteus via either submodule or install" On)
 
 if (ENABLE_KOKKOS OR RAJA_ENABLE_SYCL)
   set(CMAKE_CXX_STANDARD 17)
   set(BLT_CXX_STD c++17)
-else()
-  set(CMAKE_CXX_STANDARD 14)
-  set(BLT_CXX_STD c++14)
 endif()
+add_compile_options(-Wno-unused-result)
 
 include(blt/SetupBLT.cmake)
 
@@ -160,7 +159,7 @@ if (RAJA_ENABLE_SYCL)
 endif()
 
 # Kokkos requires hipcc as the CMAKE_CXX_COMPILER for HIP AMD/VEGA GPU
-# platforms, whereas RAJAPerf Suite uses blt/CMake FindHIP to set HIP compiler. 
+# platforms, whereas RAJAPerf Suite uses blt/CMake FindHIP to set HIP compiler.
 # Separate RAJAPerf Suite and Kokkos handling of HIP compilers
 
 if ((ENABLE_HIP) AND (NOT ENABLE_KOKKOS))
@@ -225,8 +224,8 @@ else()
   set(RAJAPERF_COMPILER_OPTIONS "${CMAKE_CXX_FLAGS_${RAJAPERF_BUILD_TYPE}}")
   list(APPEND RAJAPERF_COMPILER_OPTIONS ${CMAKE_CXX_FLAGS})
 endif()
-
-configure_file(${CMAKE_SOURCE_DIR}/src/rajaperf_config.hpp.in
+message(STATUS "${CMAKE_CURRENT_SOURCE_DIR}")
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/rajaperf_config.hpp.in
   ${CMAKE_CURRENT_BINARY_DIR}/include/rajaperf_config.hpp)
 
 include_directories($<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include>)
@@ -269,6 +268,17 @@ Kokkos_ENABLE_HIP variable to ON")
   get_property(KOKKOS_INCLUDE_DIRS DIRECTORY tpl/kokkos PROPERTY INCLUDE_DIRECTORIES)
   include_directories(${KOKKOS_INCLUDE_DIRS})
   list(APPEND RAJA_PERFSUITE_DEPENDS kokkos)
+endif()
+
+if (ENABLE_JIT)
+  if (NOT "${PROTEUS_INSTALL_DIR}" STREQUAL "")
+    find_package(proteus REQUIRED PATHS "${PROTEUS_INSTALL_DIR}")
+    message(STATUS "${PROTEUS_INSTALL_DIR}/include")
+    include_directories("${PROTEUS_INSTALL_DIR}/include")
+  else()
+    add_subdirectory(tpl/RAJA/tpl/proteus)
+  endif()
+  find_package(CUDAToolkit)
 endif()
 
 add_subdirectory(src)

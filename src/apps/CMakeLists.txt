@@ -115,3 +115,7 @@ blt_add_library(
           ZONAL_ACCUMULATION_3D-Sycl.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(apps)
+endif()

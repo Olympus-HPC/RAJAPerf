@@ -101,3 +101,7 @@ blt_add_library(
           POLYBENCH_MVT-Sycl.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(polybench)
+endif()

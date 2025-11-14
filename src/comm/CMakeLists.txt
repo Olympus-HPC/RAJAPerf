@@ -41,3 +41,7 @@ blt_add_library(
           HALO_EXCHANGE_FUSED-OMPTarget.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(comm)
+endif()

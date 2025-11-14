@@ -137,3 +137,7 @@ blt_add_library(
           MULTI_REDUCE-OMPTarget.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(basic)
+endif()

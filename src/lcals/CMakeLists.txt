@@ -87,3 +87,8 @@ blt_add_library(
 	  TRIDIAG_ELIM-Sycl.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(lcals)
+endif()
+

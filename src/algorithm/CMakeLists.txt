@@ -57,3 +57,7 @@ blt_add_library(
           HISTOGRAM-OMPTarget.cpp
   DEPENDS_ON common ${RAJA_PERFSUITE_DEPENDS}
   )
+
+if (ENABLE_JIT)
+  add_proteus(algorithm)
+endif()
